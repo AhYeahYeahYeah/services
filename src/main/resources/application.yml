@@ -7,7 +7,7 @@ server:
 #    url: jdbc:mysql://8.141.159.53:3306/bank?useUnicode=true&characterEncoding=UTF-8
 #    username: bank
 #    password: BaNk1234
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    driver-class-name: com.mysql.cj.jdbc.Driver 
 
 spring:
   # R2dbcProperties
