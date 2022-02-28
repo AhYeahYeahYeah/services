@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 public class StorageController {
     @Resource
     private StorageService storageService;
+    // 库存锁定
     @PostMapping("/lock")
     public void StorageLock(String pid,String oid){
         storageService.StorageLock(pid, oid);

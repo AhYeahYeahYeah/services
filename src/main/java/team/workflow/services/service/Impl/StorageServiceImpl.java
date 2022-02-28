@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 public class StorageServiceImpl implements StorageService {
     @Resource
     private ProductRepository productRepository;
+    // 库存锁定
     @Override
     public void StorageLock(String pid, String oid) {
 
