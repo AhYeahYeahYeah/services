@@ -12,7 +12,7 @@ server:
 spring:
   # R2dbcProperties
   r2dbc:
-    url: r2dbcs:mysql://8.141.159.53:3306/zhixuan?sslMode=DISABLED&useUnicode=true&characterEncoding=UTF-8
+    url: r2dbcs:mysql://8.141.159.53:3306/bank?sslMode=DISABLED&useUnicode=true&characterEncoding=UTF-8
     username: bank
     password: BaNk1234
 
