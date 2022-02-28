@@ -1,5 +1,7 @@
 package team.workflow.services.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +18,12 @@ public class StorageController {
     private StorageService storageService;
     // 库存锁定
     @PostMapping("/lock")
-    public Mono<ResponseEntity> StorageLock(@RequestBody String pid, String oid){
+    public Mono<ResponseEntity> StorageLock(@RequestBody String jsonStr){
 //        storageService.StorageLock(pid, oid);
+//        return Mono.just(new ResponseEntity(HttpStatus.OK));
+        System.out.println(jsonStr);
+        JSONObject object = JSON.parseObject(jsonStr);
+        System.out.println(object.get("pid"));
         return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
 
     }
