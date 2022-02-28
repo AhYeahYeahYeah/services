@@ -1,8 +1,11 @@
 package team.workflow.services.entity;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
+@Data
 public class Customer {
-
+  @Id
   private String cid;
   private String account;
   private String password;

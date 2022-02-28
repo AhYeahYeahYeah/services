@@ -1,8 +1,11 @@
 package team.workflow.services.entity;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
+@Data
 public class Workflow {
-
+  @Id
   private String fid;
   private String name;
   private String description;

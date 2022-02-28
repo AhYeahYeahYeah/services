@@ -1,8 +1,11 @@
 package team.workflow.services.entity;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
+@Data
 public class Order {
-
+  @Id
   private String oid;
   private String pid;
   private String cid;

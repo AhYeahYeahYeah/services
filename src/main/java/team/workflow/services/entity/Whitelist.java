@@ -1,8 +1,11 @@
 package team.workflow.services.entity;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
+@Data
 public class Whitelist {
-
+  @Id
   private String wid;
   private String name;
   private String users;

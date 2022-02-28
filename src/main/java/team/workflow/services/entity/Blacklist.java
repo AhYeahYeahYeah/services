@@ -1,8 +1,11 @@
 package team.workflow.services.entity;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
+@Data
 public class Blacklist {
-
+  @Id
   private String bid;
   private String name;
   private String users;
