@@ -13,12 +13,19 @@ import javax.annotation.Resource;
 public class RegulationController {
     @Resource
     RegulationService regulationService;
+
     @PostMapping("/whitelist")
-    public Mono<ResponseEntity> Whitelist(@RequestBody String jsonStr){
+    public Mono<ResponseEntity> Whitelist(@RequestBody String jsonStr) {
         return regulationService.Whitelist(jsonStr);
     }
+
     @PostMapping("/blacklist")
-    public Mono<ResponseEntity> Blacklist(@RequestBody String jsonStr){
+    public Mono<ResponseEntity> Blacklist(@RequestBody String jsonStr) {
         return regulationService.Blacklist(jsonStr);
+    }
+
+    @PostMapping("/region")
+    public Mono<ResponseEntity> Region(@RequestBody String jsonStr) {
+        return regulationService.Region(jsonStr);
     }
 }
