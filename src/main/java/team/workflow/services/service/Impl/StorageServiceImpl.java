@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.MonoSink;
 import team.workflow.services.entity.Product;
 import team.workflow.services.repository.ProductRepository;
 import team.workflow.services.service.StorageService;
@@ -41,37 +42,51 @@ public class StorageServiceImpl implements StorageService {
                                 return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
                             }
                             if(productlist.get(0).getOid()!=null){
-                                System.out.println("3333333333333-----");
                                 try {
                                     Thread.sleep(6000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
+
                                 for(int f=10;f>0;f--){
+                                    System.out.println("2222222S");
                                     Mono<Product> p=productRepository.findById(pid);
-                                    p.flatMap(p1->{
+                                    p.subscribe(a->System.out.println(a));
+                                    Mono<Integer> rep=p.flatMap(p1->{
                                         if(p1.getOid()==null){
-                                            productRepository.setOid(oid,pid);
-                                            return Mono.just(new ResponseEntity(HttpStatus.OK));
+                                            System.out.println("okkkk");
+                                            Mono<Integer>res=productRepository.setOid(oid,pid);
+                                            return Mono.just(1);
                                         }else {
+                                            System.out.println("11111");
                                             try {
                                                 Thread.sleep(6000);
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
+                                            System.out.println("in");
+                                            return Mono.just(0);
                                         }
-                                        return null;
                                     });
+
                                 }
                                 return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
                             }else {
                                 Mono<Integer> res=productRepository.setOid(oid,pid);
-                                res.subscribe(System.out::println);
-                                return Mono.just(new ResponseEntity(HttpStatus.OK));
+                                return Mono.just(new ResponseEntity(res,HttpStatus.OK));
                             }
                         }
 
                 );
         //return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+    }
+
+    //库存解锁
+    @Override
+    public Mono<ResponseEntity> StorageUnlock(String jsonStr) {
+        JSONObject object = JSON.parseObject(jsonStr);
+        String pid= (String) object.get("pid");
+        Mono<Integer> res=productRepository.deleteOid(pid);
+        return Mono.just(new ResponseEntity(res,HttpStatus.OK));
     }
 }
