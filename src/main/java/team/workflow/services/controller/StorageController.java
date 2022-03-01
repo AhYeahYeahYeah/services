@@ -19,18 +19,8 @@ public class StorageController {
     // 库存锁定
     @PostMapping("/lock")
     public Mono<ResponseEntity> StorageLock(@RequestBody String jsonStr){
-//        storageService.StorageLock(pid, oid);
-//        return Mono.just(new ResponseEntity(HttpStatus.OK));
-        System.out.println(jsonStr);
-        JSONObject object = JSON.parseObject(jsonStr);
-        System.out.println(object.get("pid"));
-        return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
-
+          return storageService.StorageLock(jsonStr);
     }
-//    @PostMapping("/lock1")
-//    public Mono<Integer> StorageLock1(@RequestBody String pid, String oid){
-////        storageService.StorageLock(pid, oid);
-//        return Mono.just(1);
-//
-//    }
+
+
 }

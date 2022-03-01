@@ -1,7 +1,10 @@
 package team.workflow.services.service;
 
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
+
 public interface StorageService {
     // 库存锁定
-    void StorageLock(String pid,String oid);
+    Mono<ResponseEntity> StorageLock(String jsonStr);
 
 }
