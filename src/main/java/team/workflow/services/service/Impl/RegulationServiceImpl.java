@@ -33,10 +33,12 @@ public class RegulationServiceImpl implements RegulationService {
                             return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
                         }
                         String cidlist = whitelist.getUsers();
-                        cidlist=cidlist.replace("[","");
+                        cidlist=cidlist.replace("[","")
+                                        .replace("]","").replace("\"","");
                         String[] cidlists=cidlist.split(",");
                         for (String i:cidlists
                              ) {
+                            System.out.println(i);
                             if(i.equals(cid)){
                                 System.out.println("success");
                                 return Mono.just(new ResponseEntity(HttpStatus.OK));
