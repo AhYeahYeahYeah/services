@@ -17,4 +17,8 @@ public class RegulationController {
     public Mono<ResponseEntity> Whitelist(@RequestBody String jsonStr){
         return regulationService.Whitelist(jsonStr);
     }
+    @PostMapping("/blacklist")
+    public Mono<ResponseEntity> Blacklist(@RequestBody String jsonStr){
+        return regulationService.Blacklist(jsonStr);
+    }
 }
