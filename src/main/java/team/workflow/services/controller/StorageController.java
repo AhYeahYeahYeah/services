@@ -21,6 +21,11 @@ public class StorageController {
     public Mono<ResponseEntity> StorageLock(@RequestBody String jsonStr){
           return storageService.StorageLock(jsonStr);
     }
+    // 库存解锁
+    @PostMapping("/unlock")
+    public Mono<ResponseEntity> StorageUnlock(@RequestBody String jsonStr){
+        return storageService.StorageUnlock(jsonStr);
+    }
 
 
 }

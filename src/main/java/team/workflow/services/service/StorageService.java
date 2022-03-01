@@ -7,4 +7,5 @@ public interface StorageService {
     // 库存锁定
     Mono<ResponseEntity> StorageLock(String jsonStr);
 
+    Mono<ResponseEntity> StorageUnlock(String jsonStr);
 }
