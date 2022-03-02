@@ -8,4 +8,6 @@ public interface StorageService {
     Mono<ResponseEntity> StorageLock(String jsonStr);
 
     Mono<ResponseEntity> StorageUnlock(String jsonStr);
+
+    Mono<ResponseEntity> StorageUpdate(String jsonStr);
 }

@@ -13,4 +13,6 @@ public interface ProductRepository extends ReactiveCrudRepository<Product,String
     @Query("UPDATE product SET oid=NULL WHERE pid=:pid")
     Mono<Integer> deleteOid(String pid);
 
+    @Query("UPDATE product SET storage=storage-1 WHERE pid=:pid")
+    Mono<Integer> updateStorage(String pid);
 }

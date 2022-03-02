@@ -26,6 +26,11 @@ public class StorageController {
     public Mono<ResponseEntity> StorageUnlock(@RequestBody String jsonStr){
         return storageService.StorageUnlock(jsonStr);
     }
+    //库存更新
+    @PostMapping("/update")
+    public Mono<ResponseEntity> StorageUpdate(@RequestBody String jsonStr){
+        return storageService.StorageUpdate(jsonStr);
+    }
 
 
 }
