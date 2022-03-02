@@ -6,9 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import team.workflow.services.dto.CustomerDto;
 import team.workflow.services.entity.CustomerProfile;
 import team.workflow.services.entity.Product;
 import team.workflow.services.repository.CustomerProfileRepository;
+import team.workflow.services.repository.CustomerRepository;
 import team.workflow.services.service.ExamineService;
 import team.workflow.services.utils.IDCardValidate;
 
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class ExamineServiceImpl implements ExamineService {
     @Resource
     private CustomerProfileRepository customerProfileRepository;
+    @Resource
+    private CustomerRepository customerRepository;
     @Override
     public Mono<ResponseEntity> Credential(String jsonStr) {
         JSONObject object = JSON.parseObject(jsonStr);
@@ -60,7 +64,23 @@ public class ExamineServiceImpl implements ExamineService {
         String cid= (String) object.get("cid");
         String password= (String) object.get("password");
         String phoneNum= (String) object.get("phoneNum");
-        
-        return null;
+        Mono<CustomerDto> customerDtoMono=customerRepository.selectCustomerProfile(cid);
+        return customerDtoMono
+                .flatMap(customerDtoMono1 -> Mono.just(Optional.of(customerDtoMono1)))
+                .defaultIfEmpty(Optional.empty())
+                .flatMap(customerDtoMono1 -> {
+                            if(customerDtoMono1.isEmpty()){
+                                return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                            }else {
+                                List<CustomerDto> customerDtolist=customerDtoMono1.map(Collections::singletonList).orElse(Collections.emptyList());
+                                if(customerDtolist.get(0).getPassword().equals(password)&&customerDtolist.get(0).getPhoneNum().equals(phoneNum)){
+                                    return Mono.just(new ResponseEntity(HttpStatus.OK));
+                                }else{
+                                    return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                                }
+                            }
+                        }
+
+                );
     }
 }
