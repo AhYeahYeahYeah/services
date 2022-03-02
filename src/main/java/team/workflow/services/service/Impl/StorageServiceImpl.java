@@ -21,6 +21,7 @@ public class StorageServiceImpl implements StorageService {
     @Resource
     private ProductRepository productRepository;
     // 库存锁定
+    //等待锁定待修改
     @Override
     public Mono<ResponseEntity> StorageLock(String jsonStr) {
         JSONObject object = JSON.parseObject(jsonStr);
@@ -47,7 +48,6 @@ public class StorageServiceImpl implements StorageService {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-
                                 for(int f=10;f>0;f--){
                                     System.out.println("2222222S");
                                     Mono<Product> p=productRepository.findById(pid);
@@ -107,7 +107,7 @@ public class StorageServiceImpl implements StorageService {
                         }
                 });
     }
-
+    //库存更新
     @Override
     public Mono<ResponseEntity> StorageUpdate(String jsonStr) {
         JSONObject object = JSON.parseObject(jsonStr);
