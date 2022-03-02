@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 @Data
-public class Order {
+public class Orders {
   @Id
   private String oid;
   private String pid;
