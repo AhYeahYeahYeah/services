@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.MonoSink;
 import team.workflow.services.entity.Product;
 import team.workflow.services.repository.ProductRepository;
 import team.workflow.services.service.StorageService;
@@ -15,6 +14,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class StorageServiceImpl implements StorageService {
@@ -23,7 +24,7 @@ public class StorageServiceImpl implements StorageService {
     // 库存锁定
     //等待锁定待修改
     @Override
-    public Mono<ResponseEntity> StorageLock(String jsonStr) {
+    synchronized public Mono<ResponseEntity> StorageLock(String jsonStr) {
         JSONObject object = JSON.parseObject(jsonStr);
         String pid= (String) object.get("pid");
         String oid= (String) object.get("oid");
@@ -48,28 +49,33 @@ public class StorageServiceImpl implements StorageService {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                for(int f=10;f>0;f--){
-                                    System.out.println("2222222S");
+                                int f;
+                                AtomicInteger flag= new AtomicInteger();
+                                for(f=10;f>0;f--){
                                     Mono<Product> p=productRepository.findById(pid);
-                                    p.subscribe(a->System.out.println(a));
-                                    Mono<Integer> rep=p.flatMap(p1->{
+                                    p.subscribe(p1->{
                                         if(p1.getOid()==null){
                                             System.out.println("okkkk");
-                                            Mono<Integer>res=productRepository.setOid(oid,pid);
-                                            return Mono.just(1);
+                                            flag.set(1);
                                         }else {
-                                            System.out.println("11111");
                                             try {
                                                 Thread.sleep(6000);
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
                                             System.out.println("in");
-                                            return Mono.just(0);
                                         }
                                     });
+                                    if(flag.get()==1){
+                                        break;
+                                    }
                                 }
-                                return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                                if(f==0){
+                                    return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                                }else {
+                                    Mono<Integer> res=productRepository.setOid(oid, pid);
+                                    return Mono.just(new ResponseEntity(res,HttpStatus.OK));
+                                }
                             }else {
                                 Mono<Integer> res=productRepository.setOid(oid,pid);
                                 return Mono.just(new ResponseEntity(res,HttpStatus.OK));
