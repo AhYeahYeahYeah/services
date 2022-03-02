@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import team.workflow.services.entity.Blacklist;
 import team.workflow.services.entity.CustomerProfile;
+import team.workflow.services.entity.UserGroup;
 import team.workflow.services.entity.Whitelist;
 import team.workflow.services.repository.BlacklistRepository;
 import team.workflow.services.repository.CustomerProfileRepository;
+import team.workflow.services.repository.UserGroupRepository;
 import team.workflow.services.repository.WhitelistRepository;
 import team.workflow.services.service.RegulationService;
 
@@ -23,12 +25,15 @@ public class RegulationServiceImpl implements RegulationService {
     private static final Whitelist WHITELIST_NULL = new Whitelist();
     private static final Blacklist BLACKLIST_NULL = new Blacklist();
     private static final CustomerProfile CUSTOMER_PROFILE_NULL = new CustomerProfile();
+    private static final UserGroup USER_GROUP_NULL = new UserGroup();
     @Resource
     private WhitelistRepository whitelistRepository;
     @Resource
     private BlacklistRepository blacklistRepository;
     @Resource
     private CustomerProfileRepository customerProfileRepository;
+    @Resource
+    private UserGroupRepository userGroupRepository;
 
     @Override
     public Mono<ResponseEntity> Whitelist(String jsonStr) {
@@ -128,5 +133,36 @@ public class RegulationServiceImpl implements RegulationService {
                 });
 
 
+    }
+
+    @Override
+    public Mono<ResponseEntity> Tag(String jsonStr) {
+        JSONObject object = JSON.parseObject(jsonStr);
+        String cid = (String) object.get("cid");
+        String gid = (String) object.get("gid");
+        Mono<UserGroup> userGroupMono = userGroupRepository.findById(gid);
+        return userGroupMono.defaultIfEmpty(USER_GROUP_NULL)
+                .flatMap(new Function<UserGroup, Mono<ResponseEntity>>() {
+                    @Override
+                    public Mono<ResponseEntity> apply(UserGroup userGroup) {
+                        if (userGroup == USER_GROUP_NULL) {
+                            System.out.println("find no usergroup");
+                            return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                        }
+                        String cidlist = userGroup.getUsers();
+                        cidlist = cidlist.replace("[", "")
+                                .replace("]", "").replace("\"", "");
+                        String[] cidlists = cidlist.split(",");
+                        for (String i : cidlists
+                        ) {
+                            System.out.println(i);
+                            if (i.equals(cid)) {
+                                System.out.println("success");
+                                return Mono.just(new ResponseEntity(HttpStatus.OK));
+                            }
+                        }
+                        return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                    }
+                });
     }
 }

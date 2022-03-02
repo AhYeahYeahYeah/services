@@ -28,4 +28,9 @@ public class RegulationController {
     public Mono<ResponseEntity> Region(@RequestBody String jsonStr) {
         return regulationService.Region(jsonStr);
     }
+
+    @PostMapping("/tag")
+    public Mono<ResponseEntity> Tag(@RequestBody String jsonStr) {
+        return regulationService.Tag(jsonStr);
+    }
 }

@@ -9,4 +9,6 @@ public interface RegulationService {
     Mono<ResponseEntity> Blacklist(String jsonStr);
 
     Mono<ResponseEntity> Region(String jsonStr);
+
+    Mono<ResponseEntity> Tag(String jsonStr);
 }
