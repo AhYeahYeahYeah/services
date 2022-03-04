@@ -5,26 +5,34 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import team.workflow.services.entity.Product;
 import team.workflow.services.repository.ProductRepository;
 import team.workflow.services.service.StorageService;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class StorageServiceImpl implements StorageService {
     @Resource
     private ProductRepository productRepository;
+
+    private Lock lock = new ReentrantLock();
     // 库存锁定
     //等待锁定待修改
     @Override
-    synchronized public Mono<ResponseEntity> StorageLock(String jsonStr) {
+    public Mono<ResponseEntity> StorageLock(String jsonStr) {
         JSONObject object = JSON.parseObject(jsonStr);
         String pid= (String) object.get("pid");
         String oid= (String) object.get("oid");
@@ -44,38 +52,30 @@ public class StorageServiceImpl implements StorageService {
                                 return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
                             }
                             if(productlist.get(0).getOid()!=null){
-                                try {
-                                    Thread.sleep(6000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                int f;
-                                AtomicInteger flag= new AtomicInteger();
-                                for(f=10;f>0;f--){
-                                    Mono<Product> p=productRepository.findById(pid);
-                                    p.subscribe(p1->{
-                                        if(p1.getOid()==null){
-                                            System.out.println("okkkk");
-                                            flag.set(1);
+                                Mono<String> source = Mono.defer(() -> {
+                                    Mono<Product> productMono=productRepository.findById(pid);
+                                    return productMono.flatMap(p->{
+                                        System.out.println(p);
+                                        if(p.getOid()==null){
+                                            System.out.println("1111111");
+                                            return Mono.just("1");
                                         }else {
-                                            try {
-                                                Thread.sleep(6000);
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-                                            System.out.println("in");
+                                            System.out.println("0000000");
+                                            return Mono.empty();
                                         }
                                     });
-                                    if(flag.get()==1){
-                                        break;
-                                    }
-                                }
-                                if(f==0){
-                                    return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
-                                }else {
-                                    Mono<Integer> res=productRepository.setOid(oid, pid);
-                                    return Mono.just(new ResponseEntity(res,HttpStatus.OK));
-                                }
+                                });
+                                //重复10次，每次等待6s
+                                return source.repeatWhenEmpty(1,req->req.delayElements(Duration.ofSeconds(6))).onErrorReturn("0")
+                                            .flatMap(s->{
+                                                System.out.println(s);
+                                                if(s.equals("1")){
+                                                    Mono<Integer> res=productRepository.setOid(oid, pid);
+                                                    return Mono.just(new ResponseEntity(res,HttpStatus.OK));
+                                                }else {
+                                                    return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                                                }
+                                            });
                             }else {
                                 Mono<Integer> res=productRepository.setOid(oid,pid);
                                 return Mono.just(new ResponseEntity(res,HttpStatus.OK));
