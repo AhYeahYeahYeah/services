@@ -102,6 +102,9 @@ public class StorageServiceImpl implements StorageService {
                            return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
                         }
                         List<Product> productList=product1.map(Collections::singletonList).orElse(Collections.emptyList());
+                       if(productList.get(0).getOid()==null){
+                           return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                       }
                        //检测是否为自己的oid
                         if(productList.get(0).getOid().equals(oid)){
                             //解锁，将oid设为null
