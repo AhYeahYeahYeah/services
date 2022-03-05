@@ -5,46 +5,46 @@ import org.springframework.data.annotation.Id;
 
 @Data
 public class Workflow {
-  @Id
-  private String fid;
-  private String name;
-  private String description;
-  private String version;
+    @Id
+    private String fid;
+    private String name;
+    private String description;
+    private String version;
 
 
-  public String getFid() {
-    return fid;
-  }
+    public String getFid() {
+        return fid;
+    }
 
-  public void setFid(String fid) {
-    this.fid = fid;
-  }
-
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setFid(String fid) {
+        this.fid = fid;
+    }
 
 
-  public String getDescription() {
-    return description;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
-  public String getVersion() {
-    return version;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public void setVersion(String version) {
-    this.version = version;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
 }

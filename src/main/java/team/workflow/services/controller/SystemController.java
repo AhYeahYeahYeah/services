@@ -13,9 +13,10 @@ import javax.annotation.Resource;
 public class SystemController {
     @Resource
     private SystemService systemService;
+
     //日志录入
     @PostMapping("/log")
-    public Mono<ResponseEntity> setLog(@RequestBody String jsonStr){
+    public Mono<ResponseEntity> setLog(@RequestBody String jsonStr) {
         return systemService.setLog(jsonStr);
     }
 

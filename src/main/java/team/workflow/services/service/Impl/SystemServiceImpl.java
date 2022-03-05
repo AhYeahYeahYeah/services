@@ -26,41 +26,42 @@ public class SystemServiceImpl implements SystemService {
     private OrderRepository orderRepository;
     @Resource
     private LogRepository logRepository;
+
     @Override
     public Mono<ResponseEntity> setLog(String jsonStr) {
         JSONObject object = JSON.parseObject(jsonStr);
-        String oid= (String) object.get("oid");
-        String description= (String) object.get("description");
-        Mono<Orders> ordersMono=orderRepository.findById(oid);
+        String oid = (String) object.get("oid");
+        String description = (String) object.get("description");
+        Mono<Orders> ordersMono = orderRepository.findById(oid);
         return ordersMono
                 .flatMap(ordersMono1 -> Mono.just(Optional.of(ordersMono1)))
                 .defaultIfEmpty(Optional.empty())
                 .flatMap(ordersMono1 -> {
-                    if(ordersMono1.isEmpty()){
+                    if (ordersMono1.isEmpty()) {
                         return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
                     }
-                    Orders order=ordersMono1.map(Collections::singletonList).orElse(Collections.emptyList()).get(0);
+                    Orders order = ordersMono1.map(Collections::singletonList).orElse(Collections.emptyList()).get(0);
                     String status;
-                    if(order.getStatus()==0){
-                        status="正在运行";
-                    }else if(order.getStatus()==1){
-                        status="运行成功";
-                    }else{
-                        status="运行失败";
+                    if (order.getStatus() == 0) {
+                        status = "正在运行";
+                    } else if (order.getStatus() == 1) {
+                        status = "运行成功";
+                    } else {
+                        status = "运行失败";
                     }
                     Log log = new Log();
                     log.setLid(UUID.randomUUID().toString());
                     log.setOid(order.getOid());
-                    log.setDescription("产品ID:"+order.getPid()+"\n"
-                            +"用户ID:"+order.getCid()+"        "
-                            +"付款金额:"+order.getPayment()+"\n"
-                            +"订单时间:"+order.getOrderDate()+"        "
-                            +"到期日:"+order.getExpireDate()+"\n"
-                            +"工作流结果ID:"+order.getWorkflowId()+"        "
-                            +"订单状态:"+status+"\n"
-                            +"备注:"+description);
-                    Mono<Integer> res=logRepository.insert(log.getLid(),log.getOid(),log.getDescription());
-                    return Mono.just(new ResponseEntity(res,HttpStatus.OK));
+                    log.setDescription("产品ID:" + order.getPid() + "\n"
+                            + "用户ID:" + order.getCid() + "        "
+                            + "付款金额:" + order.getPayment() + "\n"
+                            + "订单时间:" + order.getOrderDate() + "        "
+                            + "到期日:" + order.getExpireDate() + "\n"
+                            + "工作流结果ID:" + order.getWorkflowId() + "        "
+                            + "订单状态:" + status + "\n"
+                            + "备注:" + description);
+                    Mono<Integer> res = logRepository.insert(log.getLid(), log.getOid(), log.getDescription());
+                    return Mono.just(new ResponseEntity(res, HttpStatus.OK));
                 });
     }
 }

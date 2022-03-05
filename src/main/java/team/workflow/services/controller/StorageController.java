@@ -16,19 +16,22 @@ import javax.annotation.Resource;
 public class StorageController {
     @Resource
     private StorageService storageService;
+
     // 库存锁定
     @PostMapping("/lock")
-    public Mono<ResponseEntity> StorageLock(@RequestBody String jsonStr){
-          return storageService.StorageLock(jsonStr);
+    public Mono<ResponseEntity> StorageLock(@RequestBody String jsonStr) {
+        return storageService.StorageLock(jsonStr);
     }
+
     // 库存解锁
     @PostMapping("/unlock")
-    public Mono<ResponseEntity> StorageUnlock(@RequestBody String jsonStr){
+    public Mono<ResponseEntity> StorageUnlock(@RequestBody String jsonStr) {
         return storageService.StorageUnlock(jsonStr);
     }
+
     //库存更新
     @PostMapping("/update")
-    public Mono<ResponseEntity> StorageUpdate(@RequestBody String jsonStr){
+    public Mono<ResponseEntity> StorageUpdate(@RequestBody String jsonStr) {
         return storageService.StorageUpdate(jsonStr);
     }
 
