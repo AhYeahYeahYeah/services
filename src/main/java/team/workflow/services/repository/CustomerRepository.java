@@ -7,7 +7,7 @@ import team.workflow.services.dto.CustomerDto;
 import team.workflow.services.entity.Blacklist;
 import team.workflow.services.entity.Customer;
 
-public interface CustomerRepository extends ReactiveCrudRepository<Customer,String> {
+public interface CustomerRepository extends ReactiveCrudRepository<Customer, String> {
     @Query("SELECT * from customer,customer_profile WHERE customer.cid=customer_profile.cid AND customer.cid=:cid")
     Mono<CustomerDto> selectCustomerProfile(String cid);
 
