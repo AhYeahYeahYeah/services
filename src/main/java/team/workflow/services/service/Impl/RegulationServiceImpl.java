@@ -51,7 +51,8 @@ public class RegulationServiceImpl implements RegulationService {
                         }
                         String cidlist = whitelist.getUsers();
                         cidlist = cidlist.replace("[", "")
-                                .replace("]", "").replace("\"", "");
+                                .replace("]", "");
+//                                .replace("\"", "");
                         String[] cidlists = cidlist.split(",");
                         for (String i : cidlists
                         ) {
@@ -82,7 +83,8 @@ public class RegulationServiceImpl implements RegulationService {
                         }
                         String cidlist = blacklist.getUsers();
                         cidlist = cidlist.replace("[", "")
-                                .replace("]", "").replace("\"", "");
+                                .replace("]", "");
+//                                .replace("\"", "");
                         String[] cidlists = cidlist.split(",");
                         for (String i : cidlists
                         ) {
@@ -151,7 +153,8 @@ public class RegulationServiceImpl implements RegulationService {
                         }
                         String cidlist = userGroup.getUsers();
                         cidlist = cidlist.replace("[", "")
-                                .replace("]", "").replace("\"", "");
+                                .replace("]", "");
+//                                .replace("\"", "");
                         String[] cidlists = cidlist.split(",");
                         for (String i : cidlists
                         ) {
