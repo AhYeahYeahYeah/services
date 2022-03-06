@@ -60,12 +60,12 @@ public class CustomerProfile {
     }
 
 
-    public String getGroup() {
+    public String getGrouplist() {
         return grouplist;
     }
 
-    public void setGroup(String group) {
-        this.grouplist = group;
+    public void setGrouplist(String grouplist) {
+        this.grouplist = grouplist;
     }
 
 
