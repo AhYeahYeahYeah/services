@@ -14,6 +14,8 @@ import team.workflow.services.repository.OrderRepository;
 import team.workflow.services.service.SystemService;
 
 import javax.annotation.Resource;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -49,14 +51,18 @@ public class SystemServiceImpl implements SystemService {
                     } else {
                         status = "运行失败";
                     }
+                    Date orderDate = new Date(Long.parseLong(order.getOrderDate()));
+                    Date expireDate = new Date(Long.parseLong(order.getExpireDate()));
+                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
                     Log log = new Log();
                     log.setLid(UUID.randomUUID().toString());
                     log.setOid(order.getOid());
                     log.setDescription("产品ID:" + order.getPid() + "\n"
                             + "用户ID:" + order.getCid() + "        "
                             + "付款金额:" + order.getPayment() + "\n"
-                            + "订单时间:" + order.getOrderDate() + "        "
-                            + "到期日:" + order.getExpireDate() + "\n"
+                            + "起息日/订单时间:" + simpleDateFormat.format(orderDate) + "        "
+                            + "到期日:" + simpleDateFormat.format(expireDate) + "\n"
                             + "工作流结果ID:" + order.getWorkflowId() + "        "
                             + "订单状态:" + status + "\n"
                             + "备注:" + description);
