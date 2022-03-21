@@ -90,11 +90,12 @@ public class RegulationServiceImpl implements RegulationService {
                         ) {
                             System.out.println(i);
                             if (i.equals(cid)) {
-                                System.out.println("success");
-                                return Mono.just(new ResponseEntity(HttpStatus.OK));
+                                System.out.println("blacklist failed");
+                                return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
                             }
                         }
-                        return Mono.just(new ResponseEntity(HttpStatus.NOT_ACCEPTABLE));
+                        System.out.println("blacklist success");
+                        return Mono.just(new ResponseEntity(HttpStatus.OK));
                     }
                 });
     }
