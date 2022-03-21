@@ -60,11 +60,12 @@ public class SystemServiceImpl implements SystemService {
                     Date orderDate = new Date(Long.parseLong(ordersDto.getOrderDate()));
                     Date expireDate = new Date(Long.parseLong(ordersDto.getExpireDate()));
                     SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    log.setDescription("产品名称:" + ordersDto.getProductName() + "\n"
-                            + "用户账户:" + ordersDto.getAccount() + "        "
-                            + "付款金额:" + ordersDto.getPayment() + "\n"
-                            + "起息日:" + simpleDateFormat.format(orderDate) + "        "
-                            + "到期日:" + simpleDateFormat.format(expireDate) + "\n"
+                    log.setDescription("产品编号:" + ordersDto.getProductNum() + "      "
+                            +"产品名称:" + ordersDto.getProductName() + "      "
+                            + "用户账户:" + ordersDto.getAccount() + "      "
+                            + "付款金额:" + ordersDto.getPayment() + "      "
+                            + "起息日/订单时间:" + simpleDateFormat.format(orderDate) + "      "
+                            + "到期日:" + simpleDateFormat.format(expireDate) + "      "
                             + "备注:" + description);
 //                    System.out.println(log.getDescription());
                     Mono<Integer> res = logRepository.insert(log.getLid(), log.getOid(), log.getDescription());

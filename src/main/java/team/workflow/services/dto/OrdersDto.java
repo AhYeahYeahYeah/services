@@ -7,12 +7,19 @@ public class OrdersDto {
 
     private String oid;
     private String account;
+    private String productNum;
     private String productName;
     private double payment;
     private String orderDate;
     private String expireDate;
 
+    public String getProductNum() {
+        return productNum;
+    }
 
+    public void setProductNum(String productNum) {
+        this.productNum = productNum;
+    }
 
     public String getOid() {
         return oid;
